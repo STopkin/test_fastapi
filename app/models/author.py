@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table, Integer, String, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-from app.database import Base, database
+from database import Base, database
 
 
 class AuthorManager:
