@@ -8,6 +8,11 @@ services:
         ports:
           - "8000:80"
 
+        env_file:
+            .env
+        depends_on:
+          - psql
+
     psql:
         image: postgres:12.1-alpine
         expose:
@@ -19,7 +24,5 @@ services:
           POSTGRES_PASSWORD: db
           POSTGRES_DB: db
           
-    env_file:
-          .env
-        depends_on:
-          - psql
+volumes:
+  psql_data: {}
