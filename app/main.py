@@ -5,10 +5,7 @@ from sqlalchemy.orm import Session
 
 from .sql import crud, models, schemas
 from .sql.database import SessionLocal, engine
-import json
-
-
-models.Base.metadata.create_all(bind=engine)
+from database import database
 
 
 description = """
@@ -29,35 +26,43 @@ test_fastapi API это моё тестовое задание по fastapi
 
 
 app = FastAPI(
-   title="test_fastapi",
+    title="test_fastapi",
     description=description,
     version="0.0.1",
-#    terms_of_service="http://example.com/terms/",
+    #    terms_of_service="http://example.com/terms/",
     contact={
         "name": "Toporkov Sergey",
         "url": "https://github.com/STopkin",
         "email": "stopkin0@gmail.com",
     },
-#    license_info={
-#        "name": "Apache 2.0",
-#        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
-#    },
+    #    license_info={
+    #        "name": "Apache 2.0",
+    #        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    #    },
     swagger_ui_parameters={"deepLinking": False, "syntaxHighlight.theme": "obsidian"}
 )
 
 
 # Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        
+#def get_db():
+#    db = SessionLocal()
+#    try:
+#        yield db
+#    finally:
+#        db.close()
+@app.on_event('startup')
+async def startup():
+    await database.connect()
+
+
+@app.on_event('shutdown')
+async def shutdown():
+    await database.disconnect()
+
 
 # получить автора и список его публикаций по ID
 @app.get("/author/{author_id}", response_model=schemas.Author)
-async def get_author(author_id: int, db: Session = Depends(get_db)):
+async def get_author(author_id: int):
     '''
     Получить информацию по автору и список его публикаций по author_id
     '''
@@ -69,7 +74,7 @@ async def get_author(author_id: int, db: Session = Depends(get_db)):
     
 # создать автора
 @app.post("/author", response_model=schemas.Author)
-async def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
+async def create_author(author: schemas.AuthorCreate):
     ''' создать автора '''
     db_author = crud.get_author_by_email(db, email=author.email)
     if db_author:
@@ -79,7 +84,7 @@ async def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_
     
 # создать публикацию у автора    
 @app.post("/author/{author_id}")
-async def create_post(author_id: int, post: schemas.PostCreate, db: Session = Depends(get_db)):
+async def create_post(author_id: int, post: schemas.PostCreate):
     ''' создать публикацию у автора '''
     db_author = crud.get_author(db, author_id)
     if not db_author:
@@ -89,7 +94,7 @@ async def create_post(author_id: int, post: schemas.PostCreate, db: Session = De
     
 # получить всех авторов и кол-во публикаций
 @app.get("/authors")
-async def get_authors_and_posts(db: Session = Depends(get_db)):
+async def get_authors_and_posts():
     ''' получить всех авторов и кол-во публикаций '''
     return crud.get_author_and_post_count(db)
     
