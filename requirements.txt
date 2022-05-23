@@ -4,4 +4,4 @@ alembic==1.7.7
 uvicorn==0.17.6
 databases==0.5.5
 asyncpg==0.25.0
-psycopg-binary==3.0.14
+psycopg2==2.9.3
