@@ -2,26 +2,35 @@ from sqlalchemy import Column, Table, Integer, String, DateTime, join
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-from database import Base, database
+from ..database import Base, database
 
 
 class AuthorManager:
     def __init__(self, model_cls):
         self.table: Table = model_cls.__table__
 
-    def get_author(self, author_id: int):
+    async def get_author(self, author_id: int):
         query = self.table.select(Author.id == author_id)
         return await database.fetch_one(query)
 
-    def get_all_authors(self):
+    async def get_all_authors(self):
         query = self.table.select()
         return await database.fetch_all(query)
 
-    def find_by_email(self, email: str):
-        query = self.table.select().where(self.table.c.email == email).count()
-        return await database.fetch_val(query)
+    async def find_by_email(self, email: str):
+        query = self.table.select().where(self.table.c.email == email)
+        return await database.fetch_one(query)
 
-    def create_author(self, name: str, email: str):
+    async def email_exists(self, email: str):
+        # return await database.fetch_val(self.table.count()) == 1
+        # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        #self.table.columns
+        query = self.table.select(None, columns=[func.count()]).select_from(self.table).where(self.table.c.email == email)
+        print(query)
+        return await database.fetch_val(query) == 1
+
+    async def create_author(self, name: str, email: str):
+        return await database.fetch_one(self.table.insert().values(name=name, email=email))
         count = self.find_by_email(email)
         if count == 0:
             return await database.fetch_one(self.table.insert().values(name=name, email=email))
