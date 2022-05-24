@@ -9,6 +9,9 @@ class PostManager:
     def __init__(self, model_cls):
         self.table: Table = model_cls.__table__
 
+    def create_post(self, author_id: int, title: str):
+        pass
+
 #    def get_total_count(self):
 #        query = self.table.count()
 #        return await database.fetch_val(query)

@@ -1,0 +1,6 @@
+Настройка миграции alembic:
+https://habr.com/ru/post/585228/
+https://alembic.sqlalchemy.org/en/latest/tutorial.html
+
+Swagger docs:
+https://fastapi.tiangolo.com/tutorial/metadata/

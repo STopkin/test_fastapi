@@ -1,11 +1,11 @@
-from typing import List
+# from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+# from sqlalchemy.orm import Session
 
-from .sql import crud, models, schemas
-from .sql.database import SessionLocal, engine
-from database import database
+# from .sql import crud, models, schemas
+# from .sql.database import SessionLocal, engine
+from .database import database
 
 
 description = """
@@ -43,13 +43,6 @@ app = FastAPI(
 )
 
 
-# Dependency
-#def get_db():
-#    db = SessionLocal()
-#    try:
-#        yield db
-#    finally:
-#        db.close()
 @app.on_event('startup')
 async def startup():
     await database.connect()
@@ -61,19 +54,20 @@ async def shutdown():
 
 
 # получить автора и список его публикаций по ID
-@app.get("/author/{author_id}", response_model=schemas.Author)
+@app.get("/author/{author_id}")
 async def get_author(author_id: int):
     '''
     Получить информацию по автору и список его публикаций по author_id
     '''
-    db_author = crud.get_author(db, author_id)
-    if not db_author:
-        raise HTTPException(status_code=404, detail="Author not found")
+#    db_author = crud.get_author(db, author_id)
+#    if not db_author:
+#        raise HTTPException(status_code=404, detail="Author not found")
+    db_author = None
     return db_author
 
     
 # создать автора
-@app.post("/author", response_model=schemas.Author)
+@app.post("/author")
 async def create_author(author: schemas.AuthorCreate):
     ''' создать автора '''
     db_author = crud.get_author_by_email(db, email=author.email)
