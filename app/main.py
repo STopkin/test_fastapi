@@ -55,22 +55,22 @@ async def shutdown():
 
 
 # получить автора и список его публикаций по ID
-#@app.get("/author/{author_id}")
-#async def get_author(author_id: int):
-#    '''
-#    Получить информацию по автору и список его публикаций по author_id
-#    '''
-#    db_author = crud.get_author(db, author_id)
-#    if not db_author:
-#        raise HTTPException(status_code=404, detail="Author not found")
-#    db_author = None
-#    return db_author
+@app.get("/author/{author_id}")
+async def get_author(author_id: int):
+    """    Получить информацию по автору и список его публикаций по :author_id   """
+    db_author = await Author.objects.get_author(author_id)
+    if not db_author:
+        raise HTTPException(status_code=404, detail="Author not found")
+    return db_author
 
     
 # создать автора
 @app.post("/author")
 async def create_author(name: str, email: str):
-    ''' создать автора '''
+    """ создать автора
+    :name - имя
+    :email - email
+    """
     if await Author.objects.email_exists(email):
         raise HTTPException(status_code=400, detail=f"Email {email} already registered")
     await Author.objects.create_author(name, email)
@@ -87,8 +87,8 @@ async def create_author(name: str, email: str):
 
     
 # получить всех авторов и кол-во публикаций
-#@app.get("/authors")
-#async def get_authors_and_posts():
-#    ''' получить всех авторов и кол-во публикаций '''
-#    return crud.get_author_and_post_count(db)
+@app.get("/authors")
+async def get_authors_and_posts():
+    """ получить всех авторов и кол-во публикаций """
+    return await Author.objects.get_all_authors()
     
