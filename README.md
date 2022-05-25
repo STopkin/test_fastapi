@@ -29,3 +29,7 @@ FastAPI:
 
 Проект должен запуститься с помощью docker-compose.
 Разместить в Git.
+
+
+Строка коннекта к БД хранится в файле /.env
+DATABASE_URL="postgresql://db:db@psql:5432/db"
