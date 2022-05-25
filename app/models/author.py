@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table, Integer, String, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, Query
 
-from ..database import Base, database
+from database import Base, database
 from .post import Post
 
 
