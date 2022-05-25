@@ -5,8 +5,8 @@ from fastapi import Depends, FastAPI, HTTPException
 
 # from .sql import crud, models, schemas
 # from .sql.database import SessionLocal, engine
-from .models import Author, Post
-from .database import database
+from models import Author, Post
+from database import database
 
 
 description = """
