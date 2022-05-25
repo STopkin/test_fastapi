@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship, Query
 from ..database import Base, database
 from .post import Post
 
+
 class AuthorManager:
     def __init__(self, model_cls):
         self.table: Table = model_cls.__table__
