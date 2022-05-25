@@ -6,4 +6,5 @@ COPY ./entrypoint.sh /entrypoint.sh
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
+#CMD ["bash", "/entrypoint.sh" ]
 CMD ["/entrypoint.sh" ]
