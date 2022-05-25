@@ -3,21 +3,18 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from ..database import Base, database
-#from .author import Author
+
 
 class PostManager:
     def __init__(self, model_cls):
         self.table: Table = model_cls.__table__
 
     async def create_post(self, author_id: int, title: str):
-#        if await Author.objects.find_by_id(author_id):
-#            return await database.fetch_one(self.table.insert().values(author_id=author_id, title=title).
-#                                            returning(self.table.c.id))
+        from .author import Author
+        if await Author.objects.find_by_id(author_id):
+            return await database.fetch_one(self.table.insert().values(author_id=author_id, title=title).
+                                            returning(self.table.c.id))
         return None
-
-#    def get_total_count(self):
-#        query = self.table.count()
-#        return await database.fetch_val(query)
 
 
 class Post(Base):
